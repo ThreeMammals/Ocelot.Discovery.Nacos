@@ -1,0 +1,11 @@
+﻿global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Logging;
+global using Ocelot.Configuration;
+global using Ocelot.ServiceDiscovery.Providers;
+global using Nacos.V2;
+global using Nacos.V2.Exceptions;
+global using Nacos.V2.Naming.Dtos;
+global using System.Net;
+global using System.Collections.Generic;
+global using System.Linq;
+global using System.Threading.Tasks;
