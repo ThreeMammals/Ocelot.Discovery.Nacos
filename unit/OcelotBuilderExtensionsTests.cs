@@ -3,9 +3,6 @@ using Moq;
 using Ocelot.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
-using Ocelot.Discovery.Nacos;
-using Nacos.AspNetCore.V2;
-
 namespace Ocelot.Discovery.Nacos.Tests
 {
     [TestClass]
