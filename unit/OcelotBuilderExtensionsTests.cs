@@ -3,26 +3,25 @@ using Moq;
 using Ocelot.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
-namespace Ocelot.Discovery.Nacos.Tests
+namespace Ocelot.Discovery.Nacos.Tests;
+
+[TestClass]
+public class OcelotBuilderExtensionsTests
 {
-    [TestClass]
-    public class OcelotBuilderExtensionsTests
+    [TestMethod]
+    public void AddNacos_ShouldRegisterNacosServices()
     {
-        [TestMethod]
-        public void AddNacos_ShouldRegisterNacosServices()
-        {
-            // Arrange
-            var services = new ServiceCollection();
-            var configuration = new Mock<IConfiguration>();
-            var builder = new OcelotBuilder(services, configuration.Object);
+        // Arrange
+        var services = new ServiceCollection();
+        var configuration = new Mock<IConfiguration>();
+        var builder = new OcelotBuilder(services, configuration.Object);
 
-            // Act
-            builder.Services.AddOcelot().AddNacos();
+        // Act
+        builder.Services.AddOcelot().AddNacos();
 
-            // Assert
-            var serviceProvider = services.BuildServiceProvider();
-            Assert.IsNotNull(serviceProvider.GetService(NacosProviderFactory.Get.GetType()));
-            Assert.IsNotNull(serviceProvider.GetService(NacosMiddlewareConfigurationProvider.Get.GetType()));
-        }
+        // Assert
+        var serviceProvider = services.BuildServiceProvider();
+        Assert.IsNotNull(serviceProvider.GetService(NacosProviderFactory.Get.GetType()));
+        Assert.IsNotNull(serviceProvider.GetService(NacosMiddlewareConfigurationProvider.Get.GetType()));
     }
 }

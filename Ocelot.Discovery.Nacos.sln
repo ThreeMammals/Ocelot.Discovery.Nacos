@@ -5,7 +5,7 @@ VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ocelot.Discovery.Nacos", "src\Ocelot.Discovery.Nacos.csproj", "{CEF24699-3E41-D971-ACCA-FEF5CCB2011C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ocelot.Discovery.Nacos.UnitTest", "unit\Ocelot.Discovery.Nacos.UnitTest.csproj", "{FAD17C0B-4F8F-99A6-1419-9665E4210346}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ocelot.Discovery.Nacos.UnitTests", "unit\Ocelot.Discovery.Nacos.UnitTests.csproj", "{FAD17C0B-4F8F-99A6-1419-9665E4210346}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +24,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0E583663-7152-4575-9AE5-FF3D78AEAA1C}
 	EndGlobalSection
 EndGlobal
