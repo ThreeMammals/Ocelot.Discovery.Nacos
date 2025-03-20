@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Ocelot.Discovery.Nacos;
 using Ocelot.Configuration;
@@ -12,6 +13,9 @@ public class NacosProviderFactoryTests
     {
         // Arrange
         var serviceProviderMock = new Mock<IServiceProvider>();
+        var loggerMock = new Mock<ILogger<Ocelot.Discovery.Nacos.Nacos>>();
+        serviceProviderMock.Setup(sp => sp.GetService(typeof(ILogger<Ocelot.Discovery.Nacos.Nacos>)))
+            .Returns(loggerMock.Object);
         var nacosNamingServiceMock = new Mock<INacosNamingService>();
         serviceProviderMock.Setup(sp => sp.GetService(typeof(INacosNamingService)))
             .Returns(nacosNamingServiceMock.Object);

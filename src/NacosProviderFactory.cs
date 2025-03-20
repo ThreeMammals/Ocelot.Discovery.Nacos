@@ -11,7 +11,7 @@ public static class NacosProviderFactory
 
     public static ServiceDiscoveryFinderDelegate Get { get; } = CreateProvider;
 
-    private static IServiceDiscoveryProvider CreateProvider(IServiceProvider provider, ServiceProviderConfiguration config, DownstreamRoute route)
+    private static IServiceDiscoveryProvider? CreateProvider(IServiceProvider provider, ServiceProviderConfiguration config, DownstreamRoute route)
     {
         var client = provider.GetService<INacosNamingService>();
         var logger = provider.GetService<ILogger<Nacos>>();
@@ -19,9 +19,13 @@ public static class NacosProviderFactory
         {
             throw new NullReferenceException($"Cannot get an {nameof(INacosNamingService)} service during {nameof(CreateProvider)} operation to instantiate the {nameof(Nacos)} provider!");
         }
+        if (logger != null)
+        {
+            return Nacos.Equals(config.Type, StringComparison.OrdinalIgnoreCase)
+                ? new Nacos(route.ServiceName, client, logger)
+                : null;
+        }
 
-        return Nacos.Equals(config.Type, StringComparison.OrdinalIgnoreCase)
-            ? new Nacos(route.ServiceName, client,logger)
-            : null;
+        return null;
     }
 }
