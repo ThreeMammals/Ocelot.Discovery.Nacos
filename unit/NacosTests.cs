@@ -2,14 +2,13 @@
 using Moq;
 using Nacos.V2;
 using Nacos.V2.Naming.Dtos;
-using Nacos.V2.Exceptions;
 
 [TestClass]
 public class NacosTests
 {
-    private Mock<INacosNamingService> _mockNacosNamingService;
-    private Ocelot.Discovery.Nacos.Nacos _nacos;
-    private Mock<ILogger<Ocelot.Discovery.Nacos.Nacos>> _mockLogger; 
+    private Mock<INacosNamingService>? _mockNacosNamingService;
+    private Ocelot.Discovery.Nacos.Nacos? _nacos;
+    private Mock<ILogger<Ocelot.Discovery.Nacos.Nacos>>? _mockLogger;
 
     [TestInitialize]
     public void Setup()
@@ -28,10 +27,10 @@ public class NacosTests
             new Instance { InstanceId = "1", Ip = "127.0.0.1", Port = 80, ServiceName = "testService", Healthy = true, Enabled = true, Weight = 1 },
             new Instance { InstanceId = "2", Ip = "127.0.0.2", Port = 81, ServiceName = "testService", Healthy = true, Enabled = true, Weight = 1 }
         };
-        _mockNacosNamingService.Setup(x => x.GetAllInstances("testService")).ReturnsAsync(instances);
+        _mockNacosNamingService?.Setup(x => x.GetAllInstances("testService")).ReturnsAsync(instances);
 
         // Act
-        var result = await _nacos.GetAsync();
+        var result = await _nacos?.GetAsync()!;
 
         // Assert
         Assert.AreEqual(2, result.Count);
@@ -48,10 +47,10 @@ public class NacosTests
             new Instance { InstanceId = "1", Ip = "127.0.0.1", Port = 80, ServiceName = "testService", Healthy = false, Enabled = true, Weight = 1 },
             new Instance { InstanceId = "2", Ip = "127.0.0.2", Port = 81, ServiceName = "testService", Healthy = false, Enabled = true, Weight = 1 }
         };
-        _mockNacosNamingService.Setup(x => x.GetAllInstances("testService")).ReturnsAsync(instances);
+        _mockNacosNamingService?.Setup(x => x.GetAllInstances("testService")).ReturnsAsync(instances);
 
         // Act
-        var result = await _nacos.GetAsync();
+        var result = await _nacos?.GetAsync()!;
 
         // Assert
         Assert.AreEqual(0, result.Count);

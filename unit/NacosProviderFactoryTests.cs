@@ -85,7 +85,7 @@ public class NacosProviderFactoryTests
         // Arrange
         var serviceProviderMock = new Mock<IServiceProvider>();
         serviceProviderMock.Setup(sp => sp.GetService(typeof(INacosNamingService)))
-            .Returns(null);
+            .Returns(null!);
 
         var config = new ServiceProviderConfiguration(
             type: "nacos",
