@@ -7,12 +7,15 @@ public class Nacos : IServiceDiscoveryProvider
 {
     private readonly INacosNamingService _client;
     private readonly string _serviceName;
+    private readonly ILogger<Nacos> _logger;
 
-    public Nacos(string serviceName,INacosNamingService client)
+    public Nacos(string serviceName,INacosNamingService client,ILogger<Nacos> logger)
     {
         _client = client;
         _serviceName = serviceName;
+        _logger = logger;
     }
+
 
     public async Task<List<Service>> GetAsync()
     {
@@ -22,43 +25,37 @@ public class Nacos : IServiceDiscoveryProvider
                 .ConfigureAwait(false);
 
             return instances?
-                .Where(i => i.Healthy && i.Enabled && i.Weight > 0) // 健康检查过滤
+                .Where(i => i.Healthy && i.Enabled && i.Weight > 0) // Filter out unhealthy instances
                 .Select(TransformInstance)
-                .ToList() ?? new List<Service>();
+                .ToList() ?? new();
         }
         catch (NacosException ex)
         {
-            throw ex;
+            _logger.LogError(ex, $"An exception occurred while fetching instances for service {_serviceName} from Nacos.");
+            return new();
         }
     }
 
     private Service TransformInstance(Instance instance)
     {
-        var metadata = instance.Metadata ?? new Dictionary<string, string>();
+        var metadata = instance.Metadata ?? new();
 
         return new Service(
             id: instance.InstanceId,
-            hostAndPort: new ServiceHostAndPort(instance.Ip, instance.Port),
+            hostAndPort: new(instance.Ip, instance.Port),
             name: instance.ServiceName,
             version: metadata.GetValueOrDefault("version", "default"),
             tags: ProcessMetadataTags(metadata)
         );
     }
 
-    private List<string> ProcessMetadataTags(IDictionary<string, string> metadata)
-    {
-        return metadata
-            .Where(kv => !_reservedKeys.Contains(kv.Key))
-            .Select(kv => FormatTag(kv))
-            .ToList();
-    }
+    private List<string> ProcessMetadataTags(IDictionary<string, string> metadata) => metadata
+        .Where(kv => !_reservedKeys.Contains(kv.Key))
+        .Select(kv => FormatTag(kv))
+        .ToList();
 
     private string FormatTag(KeyValuePair<string, string> kv)
-    {
-        var encodedKey = WebUtility.UrlEncode(kv.Key);
-        var encodedValue = WebUtility.UrlEncode(kv.Value);
-        return $"{encodedKey}={encodedValue}";
-    }
+        => $"{WebUtility.UrlEncode(kv.Key)}={WebUtility.UrlEncode(kv.Value)}";
 
     private static readonly string[] _reservedKeys = { "version", "group", "cluster", "namespace", "weight" };
 }

@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Microsoft.Extensions.Logging;
+using Moq;
 using Nacos.V2;
 using Nacos.V2.Naming.Dtos;
 using Nacos.V2.Exceptions;
@@ -8,12 +9,14 @@ public class NacosTests
 {
     private Mock<INacosNamingService> _mockNacosNamingService;
     private Ocelot.Discovery.Nacos.Nacos _nacos;
+    private Mock<ILogger<Ocelot.Discovery.Nacos.Nacos>> _mockLogger; 
 
     [TestInitialize]
     public void Setup()
     {
         _mockNacosNamingService = new Mock<INacosNamingService>();
-        _nacos = new Ocelot.Discovery.Nacos.Nacos("testService", _mockNacosNamingService.Object);
+        _mockLogger = new Mock<ILogger<Ocelot.Discovery.Nacos.Nacos>>();
+        _nacos = new Ocelot.Discovery.Nacos.Nacos("testService", _mockNacosNamingService.Object,_mockLogger.Object);
     }
 
     [TestMethod]
@@ -52,15 +55,5 @@ public class NacosTests
 
         // Assert
         Assert.AreEqual(0, result.Count);
-    }
-
-    [TestMethod]
-    public async Task GetAsync_ShouldThrowException_WhenNacosExceptionOccurs()
-    {
-        // Arrange
-        _mockNacosNamingService.Setup(x => x.GetAllInstances("testService")).ThrowsAsync(new NacosException("non existing service"));
-
-        // Act & Assert
-        await Assert.ThrowsExceptionAsync<NacosException>(() => _nacos.GetAsync());
     }
 }

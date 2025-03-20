@@ -14,13 +14,14 @@ public static class NacosProviderFactory
     private static IServiceDiscoveryProvider CreateProvider(IServiceProvider provider, ServiceProviderConfiguration config, DownstreamRoute route)
     {
         var client = provider.GetService<INacosNamingService>();
+        var logger = provider.GetService<ILogger<Nacos>>();
         if (client == null)
         {
             throw new NullReferenceException($"Cannot get an {nameof(INacosNamingService)} service during {nameof(CreateProvider)} operation to instantiate the {nameof(Nacos)} provider!");
         }
 
         return Nacos.Equals(config.Type, StringComparison.OrdinalIgnoreCase)
-            ? new Nacos(route.ServiceName, client)
+            ? new Nacos(route.ServiceName, client,logger)
             : null;
     }
 }
