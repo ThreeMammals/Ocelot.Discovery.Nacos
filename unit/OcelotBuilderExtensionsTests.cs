@@ -1,9 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Ocelot.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
-namespace Ocelot.Discovery.Nacos.Tests;
+
+namespace Ocelot.Discovery.Nacos.UnitTests;
 
 [TestClass]
 public class OcelotBuilderExtensionsTests

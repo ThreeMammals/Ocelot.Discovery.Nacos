@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Ocelot.Discovery.Nacos;
-using Ocelot.Configuration;
 using Nacos.V2;
+using Ocelot.Configuration;
+
+namespace Ocelot.Discovery.Nacos.UnitTests;
 
 [TestClass]
 public class NacosProviderFactoryTests
@@ -79,7 +79,6 @@ public class NacosProviderFactoryTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(NullReferenceException))]
     public void CreateProvider_ShouldThrowException_WhenNacosNamingServiceIsNull()
     {
         // Arrange
@@ -137,9 +136,7 @@ public class NacosProviderFactoryTests
             metadataOptions: null
         );
 
-        // Act
-        var provider = NacosProviderFactory.Get(serviceProviderMock.Object, config, route);
-        // Assert
-        Assert.IsNull(provider);
+        // Act, Assert
+        Assert.ThrowsException<NullReferenceException>(() => NacosProviderFactory.Get(serviceProviderMock.Object, config, route));
     }
 }

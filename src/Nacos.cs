@@ -1,5 +1,4 @@
-﻿using Ocelot.Values;
-using Service = Ocelot.Values.Service;
+﻿using Service = Ocelot.Values.Service;
 
 namespace Ocelot.Discovery.Nacos;
 
@@ -9,13 +8,12 @@ public class Nacos : IServiceDiscoveryProvider
     private readonly string _serviceName;
     private readonly ILogger<Nacos> _logger;
 
-    public Nacos(string serviceName,INacosNamingService client,ILogger<Nacos> logger)
+    public Nacos(string serviceName, INacosNamingService client, ILogger<Nacos> logger)
     {
         _client = client;
         _serviceName = serviceName;
         _logger = logger;
     }
-
 
     public async Task<List<Service>> GetAsync()
     {
@@ -45,16 +43,16 @@ public class Nacos : IServiceDiscoveryProvider
             hostAndPort: new(instance.Ip, instance.Port),
             name: instance.ServiceName,
             version: metadata.GetValueOrDefault("version", "default"),
-            tags: ProcessMetadataTags(metadata)
+            tags: Nacos.ProcessMetadataTags(metadata)
         );
     }
 
-    private List<string> ProcessMetadataTags(IDictionary<string, string> metadata) => metadata
+    private static List<string> ProcessMetadataTags(IDictionary<string, string> metadata) => metadata
         .Where(kv => !_reservedKeys.Contains(kv.Key))
-        .Select(kv => FormatTag(kv))
+        .Select(FormatTag)
         .ToList();
 
-    private string FormatTag(KeyValuePair<string, string> kv)
+    private static string FormatTag(KeyValuePair<string, string> kv)
         => $"{WebUtility.UrlEncode(kv.Key)}={WebUtility.UrlEncode(kv.Value)}";
 
     private static readonly string[] _reservedKeys = { "version", "group", "cluster", "namespace", "weight" };
