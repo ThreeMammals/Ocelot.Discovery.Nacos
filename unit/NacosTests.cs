@@ -3,6 +3,7 @@ using Moq;
 using Nacos.V2;
 using Nacos.V2.Exceptions;
 using Nacos.V2.Naming.Dtos;
+using Ocelot.Logging;
 
 namespace Ocelot.Discovery.Nacos.UnitTests;
 
@@ -10,13 +11,13 @@ namespace Ocelot.Discovery.Nacos.UnitTests;
 public class NacosTests
 {
     private readonly Mock<INacosNamingService> _mockNacosNamingService;
-    private readonly Mock<ILogger<Nacos>> _mockLogger;
+    private readonly Mock<IOcelotLoggerFactory> _mockLogger;
     private Nacos _nacos;
 
     public NacosTests()
     {
         _mockNacosNamingService = new Mock<INacosNamingService>();
-        _mockLogger = new Mock<ILogger<Nacos>>();
+        _mockLogger = new Mock<IOcelotLoggerFactory>();
         _nacos = new Nacos("testService", _mockNacosNamingService.Object, _mockLogger.Object);
     }
 
@@ -67,8 +68,10 @@ public class NacosTests
     public async Task GetAsync_ShouldReturnEmptyList_WhenExceptionOccurs()
     {
         // Arrange
-        var testLogger = new TestLogger<Nacos>();
-        _nacos = new Nacos("testService", _mockNacosNamingService.Object, testLogger);
+        var testLogger = new Mock<IOcelotLogger>();
+        var testLoggerFactory = new Mock<IOcelotLoggerFactory>();
+        testLoggerFactory.Setup(f => f.CreateLogger<Nacos>()).Returns(testLogger.Object);
+        _nacos = new Nacos("testService", _mockNacosNamingService.Object, testLoggerFactory.Object);
         _mockNacosNamingService?.Setup(x => x.GetAllInstances("testService"))
             .ThrowsAsync(new NacosException("Test exception"));
 
@@ -77,11 +80,10 @@ public class NacosTests
 
         // Assert
         Assert.AreEqual(0, result.Count);
-        var logEntry = testLogger.LogEntries.FirstOrDefault(e => 
-            e.LogLevel == LogLevel.Error && 
-            e.Message.Contains("An exception occurred while fetching instances for service testService from Nacos."));
-        Assert.IsNotNull(logEntry);
-        Assert.IsInstanceOfType(logEntry.Exception, typeof(NacosException));
+        testLogger.Verify(
+            l => l.LogError(It.Is<string>(msg => msg.Contains("An exception occurred while fetching instances for service testService from Nacos.")), 
+                It.IsAny<NacosException>()), 
+            Times.Once);
     }
 
     [TestMethod]

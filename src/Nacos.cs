@@ -1,4 +1,5 @@
-﻿using Service = Ocelot.Values.Service;
+﻿using Ocelot.Logging;
+using Service = Ocelot.Values.Service;
 
 namespace Ocelot.Discovery.Nacos;
 
@@ -6,13 +7,13 @@ public class Nacos : IServiceDiscoveryProvider
 {
     private readonly INacosNamingService _client;
     private readonly string _serviceName;
-    private readonly ILogger<Nacos> _logger;
+    private readonly IOcelotLogger  _logger;
 
-    public Nacos(string serviceName, INacosNamingService client, ILogger<Nacos> logger)
+    public Nacos(string serviceName, INacosNamingService client, IOcelotLoggerFactory factory)
     {
         _client = client;
         _serviceName = serviceName;
-        _logger = logger;
+        _logger = factory.CreateLogger<Nacos>();;
     }
 
     public async Task<List<Service>> GetAsync()
@@ -29,7 +30,7 @@ public class Nacos : IServiceDiscoveryProvider
         }
         catch (NacosException ex)
         {
-            _logger.LogError(ex, $"An exception occurred while fetching instances for service {_serviceName} from Nacos.");
+            _logger.LogError($"An exception occurred while fetching instances for service {_serviceName} from Nacos.",ex);
             return new();
         }
     }

@@ -3,6 +3,7 @@ using Moq;
 using Nacos.V2;
 using Ocelot.Configuration;
 using Ocelot.Configuration.Builder;
+using Ocelot.Logging;
 
 namespace Ocelot.Discovery.Nacos.UnitTests;
 
@@ -14,8 +15,8 @@ public class NacosProviderFactoryTests
     {
         // Arrange
         var serviceProviderMock = new Mock<IServiceProvider>();
-        var loggerMock = new Mock<ILogger<Nacos>>();
-        serviceProviderMock.Setup(sp => sp.GetService(typeof(ILogger<Nacos>)))
+        var loggerMock = new Mock<IOcelotLoggerFactory>();
+        serviceProviderMock.Setup(sp => sp.GetService(typeof(IOcelotLoggerFactory)))
             .Returns(loggerMock.Object);
         var nacosNamingServiceMock = new Mock<INacosNamingService>();
         serviceProviderMock.Setup(sp => sp.GetService(typeof(INacosNamingService)))
