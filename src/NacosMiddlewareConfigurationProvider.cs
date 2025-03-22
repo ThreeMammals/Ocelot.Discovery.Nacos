@@ -1,11 +1,14 @@
-﻿using Ocelot.Configuration.Repository;
+﻿using Microsoft.AspNetCore.Builder;
+using Ocelot.Configuration.Repository;
 using Ocelot.Middleware;
 
 namespace Ocelot.Discovery.Nacos;
 
 public class NacosMiddlewareConfigurationProvider
 {
-    public static OcelotMiddlewareConfigurationDelegate Get { get; } = builder =>
+    public static OcelotMiddlewareConfigurationDelegate Get { get; } = GetInternal;
+
+    private static Task GetInternal(IApplicationBuilder builder)
     {
         var internalConfigRepo = builder.ApplicationServices.GetService<IInternalConfigurationRepository>();
         var log = builder.ApplicationServices.GetService<ILogger<NacosMiddlewareConfigurationProvider>>();
@@ -17,7 +20,7 @@ public class NacosMiddlewareConfigurationProvider
         }
 
         return Task.CompletedTask;
-    };
+    }
 
     private static bool UsingNacosServiceDiscoveryProvider(IInternalConfiguration configuration)
     {
