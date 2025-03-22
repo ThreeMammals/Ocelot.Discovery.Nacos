@@ -2,6 +2,7 @@
 using Moq;
 using Nacos.V2;
 using Ocelot.Configuration;
+using Ocelot.Configuration.Builder;
 
 namespace Ocelot.Discovery.Nacos.UnitTests;
 
@@ -13,8 +14,8 @@ public class NacosProviderFactoryTests
     {
         // Arrange
         var serviceProviderMock = new Mock<IServiceProvider>();
-        var loggerMock = new Mock<ILogger<Ocelot.Discovery.Nacos.Nacos>>();
-        serviceProviderMock.Setup(sp => sp.GetService(typeof(ILogger<Ocelot.Discovery.Nacos.Nacos>)))
+        var loggerMock = new Mock<ILogger<Nacos>>();
+        serviceProviderMock.Setup(sp => sp.GetService(typeof(ILogger<Nacos>)))
             .Returns(loggerMock.Object);
         var nacosNamingServiceMock = new Mock<INacosNamingService>();
         serviceProviderMock.Setup(sp => sp.GetService(typeof(INacosNamingService)))
@@ -29,53 +30,17 @@ public class NacosProviderFactoryTests
             configurationKey: "nacos",
             pollingInterval: 5000
         );
-
-        var route = new DownstreamRoute(
-            key: "testKey",
-            upstreamPathTemplate: null,
-            upstreamHeadersFindAndReplace: null,
-            downstreamHeadersFindAndReplace: null,
-            downstreamAddresses: null,
-            serviceName: "testService",
-            serviceNamespace: null,
-            httpHandlerOptions: null,
-            useServiceDiscovery: false,
-            enableEndpointEndpointRateLimiting: false,
-            qosOptions: null,
-            downstreamScheme: null,
-            requestIdKey: null,
-            isCached: false,
-            cacheOptions: null,
-            loadBalancerOptions: null,
-            rateLimitOptions: null,
-            routeClaimsRequirement: null,
-            claimsToQueries: null,
-            claimsToHeaders: null,
-            claimsToClaims: null,
-            claimsToPath: null,
-            isAuthenticated: false,
-            isAuthorized: false,
-            authenticationOptions: null,
-            downstreamPathTemplate: null,
-            loadBalancerKey: null,
-            delegatingHandlers: null,
-            addHeadersToDownstream: null,
-            addHeadersToUpstream: null,
-            dangerousAcceptAnyServerCertificateValidator: false,
-            securityOptions: null,
-            downstreamHttpMethod: null,
-            downstreamHttpVersion: null,
-            downstreamHttpVersionPolicy: default,
-            upstreamHeaders: null,
-            metadataOptions: null
-        );
+        var route = new DownstreamRouteBuilder()
+            .WithKey("testKey")
+            .WithServiceName("testService")
+            .Build();
 
         // Act
         var provider = NacosProviderFactory.Get(serviceProviderMock.Object, config, route);
 
         // Assert
         Assert.IsNotNull(provider);
-        Assert.IsInstanceOfType(provider, typeof(Ocelot.Discovery.Nacos.Nacos));
+        Assert.IsInstanceOfType(provider, typeof(Nacos));
     }
 
     [TestMethod]
@@ -95,46 +60,10 @@ public class NacosProviderFactoryTests
             configurationKey: "nacos",
             pollingInterval: 5000
         );
-
-        var route = new DownstreamRoute(
-            key: "testKey",
-            upstreamPathTemplate: null,
-            upstreamHeadersFindAndReplace: null,
-            downstreamHeadersFindAndReplace: null,
-            downstreamAddresses: null,
-            serviceName: "testService",
-            serviceNamespace: null,
-            httpHandlerOptions: null,
-            useServiceDiscovery: false,
-            enableEndpointEndpointRateLimiting: false,
-            qosOptions: null,
-            downstreamScheme: null,
-            requestIdKey: null,
-            isCached: false,
-            cacheOptions: null,
-            loadBalancerOptions: null,
-            rateLimitOptions: null,
-            routeClaimsRequirement: null,
-            claimsToQueries: null,
-            claimsToHeaders: null,
-            claimsToClaims: null,
-            claimsToPath: null,
-            isAuthenticated: false,
-            isAuthorized: false,
-            authenticationOptions: null,
-            downstreamPathTemplate: null,
-            loadBalancerKey: null,
-            delegatingHandlers: null,
-            addHeadersToDownstream: null,
-            addHeadersToUpstream: null,
-            dangerousAcceptAnyServerCertificateValidator: false,
-            securityOptions: null,
-            downstreamHttpMethod: null,
-            downstreamHttpVersion: null,
-            downstreamHttpVersionPolicy: default,
-            upstreamHeaders: null,
-            metadataOptions: null
-        );
+        var route = new DownstreamRouteBuilder()
+            .WithKey("testKey")
+            .WithServiceName("testService")
+            .Build();
 
         // Act, Assert
         Assert.ThrowsException<NullReferenceException>(() =>
@@ -146,7 +75,7 @@ public class NacosProviderFactoryTests
     {
         // Arrange
         var serviceProviderMock = new Mock<IServiceProvider>();
-        serviceProviderMock.Setup(sp => sp.GetService(typeof(ILogger<Ocelot.Discovery.Nacos.Nacos>)))
+        serviceProviderMock.Setup(sp => sp.GetService(typeof(ILogger<Nacos>)))
             .Returns(null!);
         var nacosNamingServiceMock = new Mock<INacosNamingService>();
         serviceProviderMock.Setup(sp => sp.GetService(typeof(INacosNamingService)))
@@ -161,46 +90,10 @@ public class NacosProviderFactoryTests
             configurationKey: "nacos",
             pollingInterval: 5000
         );
-
-        var route = new DownstreamRoute(
-            key: "testKey",
-            upstreamPathTemplate: null,
-            upstreamHeadersFindAndReplace: null,
-            downstreamHeadersFindAndReplace: null,
-            downstreamAddresses: null,
-            serviceName: "testService",
-            serviceNamespace: null,
-            httpHandlerOptions: null,
-            useServiceDiscovery: false,
-            enableEndpointEndpointRateLimiting: false,
-            qosOptions: null,
-            downstreamScheme: null,
-            requestIdKey: null,
-            isCached: false,
-            cacheOptions: null,
-            loadBalancerOptions: null,
-            rateLimitOptions: null,
-            routeClaimsRequirement: null,
-            claimsToQueries: null,
-            claimsToHeaders: null,
-            claimsToClaims: null,
-            claimsToPath: null,
-            isAuthenticated: false,
-            isAuthorized: false,
-            authenticationOptions: null,
-            downstreamPathTemplate: null,
-            loadBalancerKey: null,
-            delegatingHandlers: null,
-            addHeadersToDownstream: null,
-            addHeadersToUpstream: null,
-            dangerousAcceptAnyServerCertificateValidator: false,
-            securityOptions: null,
-            downstreamHttpMethod: null,
-            downstreamHttpVersion: null,
-            downstreamHttpVersionPolicy: default,
-            upstreamHeaders: null,
-            metadataOptions: null
-        );
+        var route = new DownstreamRouteBuilder()
+            .WithKey("testKey")
+            .WithServiceName("testService")
+            .Build();
 
         // Act
         var provider = NacosProviderFactory.Get(serviceProviderMock.Object, config, route);
@@ -214,8 +107,8 @@ public class NacosProviderFactoryTests
     {
         // Arrange
         var serviceProviderMock = new Mock<IServiceProvider>();
-        var loggerMock = new Mock<ILogger<Ocelot.Discovery.Nacos.Nacos>>();
-        serviceProviderMock.Setup(sp => sp.GetService(typeof(ILogger<Ocelot.Discovery.Nacos.Nacos>)))
+        var loggerMock = new Mock<ILogger<Nacos>>();
+        serviceProviderMock.Setup(sp => sp.GetService(typeof(ILogger<Nacos>)))
             .Returns(loggerMock.Object);
         var nacosNamingServiceMock = new Mock<INacosNamingService>();
         serviceProviderMock.Setup(sp => sp.GetService(typeof(INacosNamingService)))
@@ -230,46 +123,10 @@ public class NacosProviderFactoryTests
             configurationKey: "nacos",
             pollingInterval: 5000
         );
-
-        var route = new DownstreamRoute(
-            key: "testKey",
-            upstreamPathTemplate: null,
-            upstreamHeadersFindAndReplace: null,
-            downstreamHeadersFindAndReplace: null,
-            downstreamAddresses: null,
-            serviceName: "testService",
-            serviceNamespace: null,
-            httpHandlerOptions: null,
-            useServiceDiscovery: false,
-            enableEndpointEndpointRateLimiting: false,
-            qosOptions: null,
-            downstreamScheme: null,
-            requestIdKey: null,
-            isCached: false,
-            cacheOptions: null,
-            loadBalancerOptions: null,
-            rateLimitOptions: null,
-            routeClaimsRequirement: null,
-            claimsToQueries: null,
-            claimsToHeaders: null,
-            claimsToClaims: null,
-            claimsToPath: null,
-            isAuthenticated: false,
-            isAuthorized: false,
-            authenticationOptions: null,
-            downstreamPathTemplate: null,
-            loadBalancerKey: null,
-            delegatingHandlers: null,
-            addHeadersToDownstream: null,
-            addHeadersToUpstream: null,
-            dangerousAcceptAnyServerCertificateValidator: false,
-            securityOptions: null,
-            downstreamHttpMethod: null,
-            downstreamHttpVersion: null,
-            downstreamHttpVersionPolicy: default,
-            upstreamHeaders: null,
-            metadataOptions: null
-        );
+        var route = new DownstreamRouteBuilder()
+            .WithKey("testKey")
+            .WithServiceName("testService")
+            .Build();
 
         // Act
         var provider = NacosProviderFactory.Get(serviceProviderMock.Object, config, route);

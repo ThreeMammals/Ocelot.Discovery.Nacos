@@ -6,18 +6,12 @@ public class TestLogger<T> : ILogger<T>
 {
     public List<LogEntry> LogEntries { get; } = new();
 
-    public IDisposable BeginScope<TState>(TState state) => null;
+    public IDisposable BeginScope<TState>(TState state) => throw new NotImplementedException();
 
     public bool IsEnabled(LogLevel logLevel) => true;
 
     public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
     {
-        LogEntries.Add(new LogEntry
-        {
-            LogLevel = logLevel,
-            EventId = eventId,
-            Message = formatter(state, exception),
-            Exception = exception
-        });
+        LogEntries.Add(new LogEntry(logLevel, eventId, formatter(state, exception), exception));
     }
 }

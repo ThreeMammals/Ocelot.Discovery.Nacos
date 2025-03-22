@@ -9,16 +9,20 @@ namespace Ocelot.Discovery.Nacos.UnitTests;
 [TestClass]
 public class NacosTests
 {
-    private Mock<INacosNamingService>? _mockNacosNamingService;
-    private Nacos? _nacos;
-    private Mock<ILogger<Nacos>>? _mockLogger;
+    private readonly Mock<INacosNamingService> _mockNacosNamingService;
+    private readonly Mock<ILogger<Nacos>> _mockLogger;
+    private Nacos _nacos;
+
+    public NacosTests()
+    {
+        _mockNacosNamingService = new Mock<INacosNamingService>();
+        _mockLogger = new Mock<ILogger<Nacos>>();
+        _nacos = new Nacos("testService", _mockNacosNamingService.Object, _mockLogger.Object);
+    }
 
     [TestInitialize]
     public void Setup()
     {
-        _mockNacosNamingService = new Mock<INacosNamingService>();
-        _mockLogger = new Mock<ILogger<Nacos>>();
-        _nacos = new Nacos("testService", _mockNacosNamingService.Object,_mockLogger.Object);
     }
 
     [TestMethod]
