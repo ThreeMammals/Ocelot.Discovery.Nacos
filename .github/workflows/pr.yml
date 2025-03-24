@@ -20,3 +20,5 @@ jobs:
       run: dotnet build --no-restore ./Ocelot.Discovery.Nacos.sln --framework net8.0
     - name: Unit Tests
       run: dotnet test --no-restore --no-build --verbosity normal --framework net8.0 ./unit/Ocelot.Discovery.Nacos.UnitTests.csproj
+    - name: Acceptance Tests
+      run: dotnet test --no-restore --no-build --verbosity normal --framework net8.0 ./acceptance/Ocelot.Discovery.Nacos.AcceptanceTests.csproj
