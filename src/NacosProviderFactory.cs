@@ -18,7 +18,7 @@ public static class NacosProviderFactory
         var loggerFactory = provider.GetService<IOcelotLoggerFactory>();
         if (client == null)
         {
-            throw new NullReferenceException($"Cannot get an {nameof(INacosNamingService)} service during {nameof(CreateProvider)} operation to instantiate the {nameof(Nacos)} provider!");
+            throw new NullReferenceException($"{Nacos} discovery: Cannot get an {nameof(INacosNamingService)} service during {nameof(CreateProvider)} operation to instantiate the {nameof(Nacos)} provider!");
         }
         if (loggerFactory != null)
         {

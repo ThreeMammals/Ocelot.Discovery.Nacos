@@ -68,22 +68,33 @@ public class NacosTests
     public async Task GetAsync_ShouldReturnEmptyList_WhenExceptionOccurs()
     {
         // Arrange
-        var testLogger = new Mock<IOcelotLogger>();
-        var testLoggerFactory = new Mock<IOcelotLoggerFactory>();
-        testLoggerFactory.Setup(f => f.CreateLogger<Nacos>()).Returns(testLogger.Object);
-        _nacos = new Nacos("testService", _mockNacosNamingService.Object, testLoggerFactory.Object);
+        var logger = new Mock<IOcelotLogger>();
+        logger.Setup(l => l.LogError(It.IsAny<Func<string>>(), It.IsAny<Exception>()))
+            .Callback<Func<string>, Exception>(AssertMessage)
+            .Verifiable($"{nameof(IOcelotLogger)}.{nameof(IOcelotLogger.LogError)}() was not called.");
+        var factory = new Mock<IOcelotLoggerFactory>();
+        factory.Setup(f => f.CreateLogger<Nacos>()).Returns(logger.Object);
+
+        _nacos = new Nacos("testService", _mockNacosNamingService.Object, factory.Object);
+        var ex = new NacosException("Test exception");
         _mockNacosNamingService?.Setup(x => x.GetAllInstances("testService"))
-            .ThrowsAsync(new NacosException("Test exception"));
+            .ThrowsAsync(ex);
 
         // Act
         var result = await _nacos.GetAsync();
 
         // Assert
         Assert.AreEqual(0, result.Count);
-        testLogger.Verify(
-            l => l.LogError(It.Is<string>(msg => msg.Contains("An exception occurred while fetching instances for service testService from Nacos.")), 
-                It.IsAny<NacosException>()), 
+        logger.Verify(l => l.LogError(It.IsAny<Func<string>>(), It.IsAny<Exception>()),
             Times.Once);
+        static void AssertMessage(Func<string> messageFactory, Exception exception)
+        {
+            Assert.IsNotNull(messageFactory);
+            Assert.IsNotNull(exception);
+            string message = messageFactory.Invoke();
+            Assert.AreEqual("Nacos discovery: An exception occurred while fetching instances for service:testService from Nacos.", message);
+            Assert.IsInstanceOfType<NacosException>(exception);
+        }
     }
 
     [TestMethod]

@@ -8,7 +8,7 @@ public static class OcelotBuilderExtensions
     public static IOcelotBuilder AddNacos(this IOcelotBuilder builder, string section = "nacos")
     {
         builder.Services
-            .AddNacosAspNet(builder.Configuration,section)
+            .AddNacosAspNet(builder.Configuration, section)
             .AddSingleton(NacosProviderFactory.Get)
             .AddSingleton(NacosMiddlewareConfigurationProvider.Get);
         return builder;

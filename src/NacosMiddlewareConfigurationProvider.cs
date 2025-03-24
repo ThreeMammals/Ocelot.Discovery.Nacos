@@ -23,8 +23,5 @@ public class NacosMiddlewareConfigurationProvider
     }
 
     private static bool UsingNacosServiceDiscoveryProvider(IInternalConfiguration configuration)
-    {
-        return configuration?.ServiceProviderConfiguration != null 
-               && configuration.ServiceProviderConfiguration.Type?.ToLower() == "nacos";
-    }
+        => nameof(Nacos).Equals(configuration?.ServiceProviderConfiguration?.Type, StringComparison.OrdinalIgnoreCase);
 }

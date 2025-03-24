@@ -31,7 +31,8 @@ public class Nacos : IServiceDiscoveryProvider
         }
         catch (NacosException ex)
         {
-            _logger.LogError($"An exception occurred while fetching instances for service {_serviceName} from Nacos.",
+            _logger.LogError(
+                () => $"{nameof(Nacos)} discovery: An exception occurred while fetching instances for service:{_serviceName} from Nacos.",
                 ex);
             return new();
         }
@@ -46,7 +47,7 @@ public class Nacos : IServiceDiscoveryProvider
             hostAndPort: new(instance.Ip, instance.Port),
             name: instance.ServiceName,
             version: metadata.GetValueOrDefault("version", "default"),
-            tags: Nacos.ProcessMetadataTags(metadata)
+            tags: ProcessMetadataTags(metadata)
         );
     }
 
