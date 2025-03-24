@@ -52,7 +52,7 @@ public class Nacos : IServiceDiscoveryProvider
     }
 
     private static List<string> ProcessMetadataTags(IDictionary<string, string> metadata) => metadata
-        .Where(kv => !_reservedKeys.Contains(kv.Key))
+        .Where(kv => !ReservedKeys.Contains(kv.Key))
         .Select(FormatTag)
         .ToList();
 
@@ -69,5 +69,5 @@ public class Nacos : IServiceDiscoveryProvider
     /// Namespace key used to specify the namespace of the service.
     /// Weight key used to specify the weight of the service instance.
     /// </summary>
-    private static readonly string[] _reservedKeys = { "version", "group", "cluster", "namespace", "weight" };
+    public static readonly string[] ReservedKeys = { "version", "group", "cluster", "namespace", "weight" };
 }
