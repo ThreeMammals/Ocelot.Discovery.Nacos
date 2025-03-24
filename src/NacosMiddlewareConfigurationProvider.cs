@@ -11,11 +11,10 @@ public class NacosMiddlewareConfigurationProvider
     private static Task GetInternal(IApplicationBuilder builder)
     {
         var internalConfigRepo = builder.ApplicationServices.GetService<IInternalConfigurationRepository>();
-        var log = builder.ApplicationServices.GetService<ILogger<NacosMiddlewareConfigurationProvider>>();
         var config = internalConfigRepo?.Get();
-
         if (config != null && UsingNacosServiceDiscoveryProvider(config.Data))
         {
+            var log = builder.ApplicationServices.GetService<ILogger<NacosMiddlewareConfigurationProvider>>();
             log?.LogInformation("Using Nacos service discovery provider.");
         }
 
