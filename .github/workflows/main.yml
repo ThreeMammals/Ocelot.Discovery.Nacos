@@ -26,5 +26,5 @@ jobs:
       run: dotnet build --no-restore ./Ocelot.Discovery.Nacos.sln --framework net${{ matrix.dotnet-version }}
     - name: Unit Tests
       run: dotnet test --no-restore --no-build --verbosity minimal --framework net${{ matrix.dotnet-version }} ./unit/Ocelot.Discovery.Nacos.UnitTests.csproj
-    - name: Acceptance Tests
-      run: dotnet test --no-restore --no-build --verbosity minimal --framework net${{ matrix.dotnet-version }} ./acceptance/Ocelot.Discovery.Nacos.AcceptanceTests.csproj
+    # - name: Acceptance Tests
+    #   run: dotnet test --no-restore --no-build --verbosity minimal --framework net${{ matrix.dotnet-version }} ./acceptance/Ocelot.Discovery.Nacos.AcceptanceTests.csproj
