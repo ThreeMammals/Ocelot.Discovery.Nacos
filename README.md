@@ -1,3 +1,5 @@
+> Requires collaboration or partnership with the [Ocelot.Provider.Nacos](https://github.com/softlgl/Ocelot.Provider.Nacos) project.
+
 # Ocelot.Discovery.Nacos
 Ocelot vs Nacos service discovery extension package.
 <br/>Ocelot feature: [Service Discovery](https://github.com/ThreeMammals/Ocelot/blob/main/docs/features/servicediscovery.rst)
